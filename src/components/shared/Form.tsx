@@ -9,7 +9,6 @@ import { createUser } from "~/actions/db";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 type FormPropsSignup = {
   name: string;
@@ -24,7 +23,6 @@ export default function Form({ type }: { type: "Signin" | "Signup" }) {
   //!FIX Select(radix ui) directly wont work with react-hook-form
   const [role, setRole] = useState<string | null>("USER");
   const { register, handleSubmit, formState: { errors } } = useForm<FormPropsSignup | FormPropsSignin>();
-  const router = useRouter();
 
   const onSubmit = async (data: FormPropsSignup | FormPropsSignin) => {
     
