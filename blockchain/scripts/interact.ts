@@ -1,22 +1,27 @@
 import { ethers } from "hardhat";
+import { v4 as uuid } from "uuid"
+
 
 async function main() {
-    const contractAddress = "YOUR_DEPLOYED_CONTRACT_ADDRESS"; // Replace with your deployed contract address
+    const contractAddress = "0x57897bB09DB74ecc9C390C0ffC8539397a76d288"; // Replace with your deployed contract address
 
     const DiamondTracking = await ethers.getContractFactory("DiamondTracking");
     const diamondTracking = DiamondTracking.attach(contractAddress);
 
     // Set values
-    const setValuesTx = await diamondTracking.setValues(10, "diamond_1", 5);
+    const setValuesTx = await diamondTracking.setValues(10, `${uuid()}`, 5);
     await setValuesTx.wait();
     console.log("Diamond values set");
 
-    // Set sender values
+    const setSenderValuesTx = await diamondTracking.setSenderValues("New York");
+    await setSenderValuesTx.wait();
+    console.log("Sender values set");
 
-
-    // Show sender
-    const senderInfo = await diamondTracking.showSender();
-    console.log("Sender info:", senderInfo);
+    // Get data
+    const location = await diamondTracking.getData();
+    const id = await diamondTracking.getId();
+    console.log("Data:", location.toString());
+    console.log("getId", id.toString())
 }
 
 main().catch((error) => {

@@ -12,7 +12,8 @@ contract DiamondTracking{
         uint256 weight;
     }
 
-    Sender senderInfo;
+    Sender public senderInfo;
+    string public myLocation;
 
     Diamond[] public allDiamonds;
 
@@ -21,19 +22,19 @@ contract DiamondTracking{
         allDiamonds.push(diamond);
     }
     function setSenderValues(string memory _location)public{
-        senderInfo=Sender({location:_location,from:msg.sender});
+        Sender memory senderInfo2=Sender({location:_location,from:msg.sender});
+        myLocation=senderInfo2.location;
+        
 
     }
+    function getData()public view returns(string memory){
+        return myLocation;
 
-    function showSender()public view returns(Sender memory){
-        return senderInfo;
-
+    }
+    function getId()public view returns(string memory){
+        return allDiamonds[0].id;
     }
 
     
 
-
-
-
-    
 }

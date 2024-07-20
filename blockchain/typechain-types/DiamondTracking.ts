@@ -8,7 +8,6 @@ import type {
   FunctionFragment,
   Result,
   Interface,
-  AddressLike,
   ContractRunner,
   ContractMethod,
   Listener,
@@ -21,27 +20,31 @@ import type {
   TypedContractMethod,
 } from "./common";
 
-export declare namespace DiamondTracking {
-  export type SenderStruct = { from: AddressLike; location: string };
-
-  export type SenderStructOutput = [from: string, location: string] & {
-    from: string;
-    location: string;
-  };
-}
-
 export interface DiamondTrackingInterface extends Interface {
   getFunction(
     nameOrSignature:
       | "allDiamonds"
+      | "getData"
+      | "getId"
+      | "myLocation"
+      | "senderInfo"
       | "setSenderValues"
       | "setValues"
-      | "showSender"
   ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "allDiamonds",
     values: [BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "getData", values?: undefined): string;
+  encodeFunctionData(functionFragment: "getId", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "myLocation",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "senderInfo",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "setSenderValues",
@@ -51,21 +54,20 @@ export interface DiamondTrackingInterface extends Interface {
     functionFragment: "setValues",
     values: [BigNumberish, string, BigNumberish]
   ): string;
-  encodeFunctionData(
-    functionFragment: "showSender",
-    values?: undefined
-  ): string;
 
   decodeFunctionResult(
     functionFragment: "allDiamonds",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getData", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "myLocation", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "senderInfo", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setSenderValues",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setValues", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "showSender", data: BytesLike): Result;
 }
 
 export interface DiamondTracking extends BaseContract {
@@ -117,6 +119,18 @@ export interface DiamondTracking extends BaseContract {
     "view"
   >;
 
+  getData: TypedContractMethod<[], [string], "view">;
+
+  getId: TypedContractMethod<[], [string], "view">;
+
+  myLocation: TypedContractMethod<[], [string], "view">;
+
+  senderInfo: TypedContractMethod<
+    [],
+    [[string, string] & { from: string; location: string }],
+    "view"
+  >;
+
   setSenderValues: TypedContractMethod<
     [_location: string],
     [void],
@@ -127,12 +141,6 @@ export interface DiamondTracking extends BaseContract {
     [_size: BigNumberish, _id: string, _weight: BigNumberish],
     [void],
     "nonpayable"
-  >;
-
-  showSender: TypedContractMethod<
-    [],
-    [DiamondTracking.SenderStructOutput],
-    "view"
   >;
 
   getFunction<T extends ContractMethod = ContractMethod>(
@@ -147,6 +155,22 @@ export interface DiamondTracking extends BaseContract {
     "view"
   >;
   getFunction(
+    nameOrSignature: "getData"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "getId"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "myLocation"
+  ): TypedContractMethod<[], [string], "view">;
+  getFunction(
+    nameOrSignature: "senderInfo"
+  ): TypedContractMethod<
+    [],
+    [[string, string] & { from: string; location: string }],
+    "view"
+  >;
+  getFunction(
     nameOrSignature: "setSenderValues"
   ): TypedContractMethod<[_location: string], [void], "nonpayable">;
   getFunction(
@@ -156,9 +180,6 @@ export interface DiamondTracking extends BaseContract {
     [void],
     "nonpayable"
   >;
-  getFunction(
-    nameOrSignature: "showSender"
-  ): TypedContractMethod<[], [DiamondTracking.SenderStructOutput], "view">;
 
   filters: {};
 }
