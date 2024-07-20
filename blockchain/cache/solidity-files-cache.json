@@ -1,0 +1,77 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "D:\\gemPath2\\blockchain\\contracts\\DiamondTracking.sol": {
+      "lastModificationDate": 1721474636298,
+      "contentHash": "49645d7ad85a2d63ef48e9a3e242c655",
+      "sourceName": "contracts/DiamondTracking.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.8"
+      ],
+      "artifacts": [
+        "DiamondTracking"
+      ]
+    },
+    "D:\\gemPath\\blockchain\\contracts\\DiamondTracking.sol": {
+      "lastModificationDate": 1721505102548,
+      "contentHash": "8595ed8e0c8966bd93311e6814b2d7b1",
+      "sourceName": "contracts/DiamondTracking.sol",
+      "solcConfig": {
+        "version": "0.8.24",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.8"
+      ],
+      "artifacts": [
+        "DiamondTracking"
+      ]
+    }
+  }
+}

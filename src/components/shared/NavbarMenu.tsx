@@ -9,7 +9,6 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
-import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
 import Link from "next/link";
 
 export default function NavBarMenu() {
@@ -26,15 +25,15 @@ export default function NavBarMenu() {
     }
 
     return (
-        <div className="flex items-center justify-center gap-5 underline">
-            <Link href={'/register'}>Create Product</Link>
-            <Link href={'/track'}>Product</Link>
-            <Link href={'/dashboard'}>Dashboard</Link>
+        <div className="flex items-center justify-center gap-5">
+            <Link href={'/register'}  className="font-semibold">Create Product</Link>
+            <Link href={'/track'} className="font-semibold">Product</Link>
+            <Link href={'/dashboard'} className="font-semibold">Dashboard</Link>
             <DropdownMenu>
                 <DropdownMenuTrigger>
                     <Avatar>
                         {session.data.user.image && <AvatarImage src={session.data.user.image} />}
-                        <AvatarFallback>
+                        <AvatarFallback className="p-1 bg-purple-800 rounded-full">
                             {session.data.user.name?.split(" ")[0]?.charAt(0).toUpperCase()}
                         </AvatarFallback>
                     </Avatar> 

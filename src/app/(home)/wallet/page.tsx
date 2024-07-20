@@ -2,6 +2,7 @@
 
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
 declare global {
     interface Window {
@@ -9,10 +10,10 @@ declare global {
     }
 }
 
-
 export default function Page() {
 
     const [id, setId] = useState<string>("");
+    const uuid = uuidv4();
 
     const abi = [
         "function setValues(uint256 _size, string memory _id, uint256 weight) public",
@@ -33,10 +34,12 @@ export default function Page() {
     
                 const contract = new ethers.Contract("0xEE609aa2bb8843308e9292676E6E190fcFe095cb", abi, signer);
     
-                const tx = await (contract as any).setValues(10, "123", 100);
+                // generate random id
+                const tx = await (contract as any).setValues(10, uuid, 100);
                 await tx.wait();
     
                 const id = await (contract as any).getId();
+                console.log("djvdvj",id);
                 setId(id);
     
                 console.log(id);
