@@ -39,6 +39,7 @@ const config = {
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/non-nullable-type-assertion-style": "off",
     "@typescript-eslint/restrict-template-expressions" : "off",
+    "react/no-unescaped-entities": "off",
   }
 }
 module.exports = config;

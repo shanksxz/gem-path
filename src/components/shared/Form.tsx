@@ -9,6 +9,7 @@ import { createUser } from "~/actions/db";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import { useState } from "react";
+import Link from "next/link";
 
 type FormPropsSignup = {
   name: string;
@@ -20,6 +21,8 @@ type FormPropsSignup = {
 type FormPropsSignin = Omit<FormPropsSignup, "name" | "confirmPassword">
 
 export default function Form({ type }: { type: "Signin" | "Signup" }) {
+
+
   //!FIX Select(radix ui) directly wont work with react-hook-form
   const [role, setRole] = useState<string | null>("USER");
   const { register, handleSubmit, formState: { errors } } = useForm<FormPropsSignup | FormPropsSignin>();
@@ -136,6 +139,24 @@ export default function Form({ type }: { type: "Signin" | "Signup" }) {
           <GoogleIcon className="mr-2 h-4 w-4" />
           Sign in with Google
         </Button>
+           <p className="text-center text-sm" >
+          {type === "Signin" ? (
+            <>
+              Don't have an account?{" "}
+              <Link href={"/auth/signup"} className="font-semibold text-blue-500">
+                Sign up
+              </Link>
+            </>
+          ) : (
+            <>
+              Already have an account?{" "}
+              <Link href={"/auth/signin"}
+                className="font-semibold text-primary text-blue-500">
+                Sign in
+              </Link>
+            </>
+          )}
+        </p>
       </form>
     </section>
   );

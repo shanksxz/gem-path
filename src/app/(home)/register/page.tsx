@@ -21,7 +21,6 @@ export default function Register() {
         "function setValues(uint256 _size, string memory _id, uint256 weight) public",
         "function getId() public view returns (string memory)",
     ]
-
       
       const foo = async () => {
           if(!window.ethereum) {
