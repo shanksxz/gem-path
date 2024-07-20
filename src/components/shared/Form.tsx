@@ -6,6 +6,10 @@ import { Button } from "../ui/button";
 import { useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { createUser } from "~/actions/db";
+import { toast } from "sonner";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 type FormPropsSignup = {
   name: string;
@@ -14,82 +18,128 @@ type FormPropsSignup = {
   confirmPassword: string;
 };
 
-type FormPropsSignin = Omit<FormPropsSignup, "name" | "confirmPassword">;
+type FormPropsSignin = Omit<FormPropsSignup, "name" | "confirmPassword">
 
 export default function Form({ type }: { type: "Signin" | "Signup" }) {
+  //!FIX Select(radix ui) directly wont work with react-hook-form
+  const [role, setRole] = useState<string | null>("USER");
   const { register, handleSubmit, formState: { errors } } = useForm<FormPropsSignup | FormPropsSignin>();
+  const router = useRouter();
 
   const onSubmit = async (data: FormPropsSignup | FormPropsSignin) => {
+    
     if (type === "Signin") {
-     await signIn("credentials", {
+     const foo = await signIn("credentials", {
         email: data.email,
         password: data.password,
-        redirect: false,
+        role,
       });
+
+      if(foo?.status !== 200){ 
+        toast.error(`Error: ${foo?.error}`);
+        return;
+      }
+      toast.success("You have successfully signed in, redirecting you to the dashboard in 3sec");
+      // redirect in 3sec
+      // setTimeout(() => {
+      //   router.push("/");
+      // }, 3000);
+      return;
     }
 
     if ((data as FormPropsSignup).password !== (data as FormPropsSignup).confirmPassword) {
-      console.error("Passwords do not match");
+      toast.error("Passwords do not match");
       return;
     }
 
     try {
-      // handle signup by creating a new user
       const user = await createUser(data as FormPropsSignup);
-      
-      if(user) return user;
-
-      return null;
+      if(user.status == 200){
+        toast.success("You have successfully created an account, redirecting you to the dashboard in 3sec");
+      }
+      toast.error(user.message);
     } catch (error) {
-      throw new Error("Failed to create user");
+      if (error instanceof Error) {
+        toast.error(error.message);
+        return null
+      }
+      toast.error("Failed to create user");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-sm space-y-6">
-      <div className="space-y-2 text-center">
-        {type === "Signin" ? (
-          <>
-            <h1 className="text-3xl font-bold">Login</h1>
-            <p className="text-muted-foreground">Enter your email and password to sign in.</p>
-          </>
-        ) : (
-          <>
-            <h1 className="text-3xl font-bold">Signup</h1>
-            <p className="text-muted-foreground">Enter your details to get started.</p>
-          </>
+    <section className="flex h-screen justify-center items-center">
+      <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-sm space-y-6">
+        <div className="space-y-2 text-center">
+          {type === "Signin" ? (
+            <>
+              <h1 className="text-3xl font-bold">Login</h1>
+              <p className="text-muted-foreground">Enter your email and password to sign in.</p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-3xl font-bold">Signup</h1>
+              <p className="text-muted-foreground">Enter your details to get started.</p>
+            </>
+          )}
+        </div>
+        {type === "Signup" && (
+          <div className="space-y-2">
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" placeholder="John Doe" {...register("name", { required: true })} />
+          </div>
         )}
-      </div>
-      {type === "Signup" && (
         <div className="space-y-2">
-          <Label htmlFor="name">Name</Label>
-          <Input id="name" placeholder="John Doe" {...register("name", { required: true })} />
+          <Label htmlFor="email">Email</Label>
+          <Input id="email" type="email" placeholder="m@example.com" {...register("email", { required: true })} />
+          {errors.email && <p className="text-red-500">Email is required</p>}
         </div>
-      )}
-      <div className="space-y-2">
-        <Label htmlFor="email">Email</Label>
-        <Input id="email" type="email" placeholder="m@example.com" {...register("email", { required: true })} />
-        {errors.email && <p className="text-red-500">Email is required</p>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input id="password" type="password" {...register("password", { required: true })} />
-        {errors.password && <p className="text-red-500">Password is required</p>}
-      </div>
-      {type === "Signup" && (
         <div className="space-y-2">
-          <Label htmlFor="confirm-password">Confirm Password</Label>
-          <Input id="confirm-password" type="password" {...register("confirmPassword", { required: true })} />
+          <Label htmlFor="password">Password</Label>
+          <Input id="password" type="password" {...register("password", { required: true })} />
+          {errors.password && <p className="text-red-500">Password is required</p>}
         </div>
-      )}
-      <Button type="submit" className="w-full">
-        {type === "Signin" ? "Sign In" : "Create Account"}
-      </Button>
-      <Button variant="outline" className="w-full">
-        <GoogleIcon className="mr-2 h-4 w-4" />
-        Sign in with Google
-      </Button>
-    </form>
+        {type === "Signin" && (
+          <div className="space-y-2">
+            <Label htmlFor="select">Role</Label>
+            <Select
+                onValueChange={(value : any) => setRole(value)}
+            >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Role" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Select Role</SelectLabel>
+                    <SelectItem value="USER">User</SelectItem>
+                    <SelectItem value="ADMIN">Admin</SelectItem>
+                    <SelectItem value="MINER">Miner</SelectItem>
+                    <SelectItem value="MANUFACTURER">Manufacturer</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+          </div>
+        )}
+        {type === "Signup" && (
+          <div className="space-y-2">
+            <Label htmlFor="confirm-password">Confirm Password</Label>
+            <Input id="confirm-password" type="password" {...register("confirmPassword", { required: true })} />
+          </div>
+        )}
+        <Button type="submit" className="w-full">
+          {type === "Signin" ? "Sign In" : "Create Account"}
+        </Button>
+        <Button variant="outline" className="w-full" 
+          onClick={(e : any) => {
+            e.preventDefault();
+            signIn("google", { callbackUrl: "/" });
+          }}
+          >
+          <GoogleIcon className="mr-2 h-4 w-4" />
+          Sign in with Google
+        </Button>
+      </form>
+    </section>
   );
 }
 
