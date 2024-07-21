@@ -4,12 +4,13 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-    DropdownMenuSeparator
 } from "~/components/ui/dropdown-menu"
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
+import { DropdownMenuSeparator } from "@radix-ui/react-dropdown-menu";
+import Link from "next/link";
 
 export default function NavBarMenu() {
 
@@ -25,20 +26,25 @@ export default function NavBarMenu() {
     }
 
     return (
-        <DropdownMenu>
-            <DropdownMenuTrigger>
-                <Avatar>
-                    {session.data.user.image && <AvatarImage src={session.data.user.image} />}
-                    <AvatarFallback>
-                        {session.data.user.name?.split(" ")[0]?.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                </Avatar> 
-                
+        <div className="flex items-center justify-center gap-5 underline">
+            <Link href={'/register'}>Create Product</Link>
+            <Link href={'/track'}>Product</Link>
+            <Link href={'/dashboard'}>Dashboard</Link>
+            <DropdownMenu>
+                <DropdownMenuTrigger>
+                    <Avatar>
+                        {session.data.user.image && <AvatarImage src={session.data.user.image} />}
+                        <AvatarFallback>
+                            {session.data.user.name?.split(" ")[0]?.charAt(0).toUpperCase()}
+                        </AvatarFallback>
+                    </Avatar> 
                     
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="rounded-sm" side="bottom" align="end" sideOffset={20}>
-                <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
+                        
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="rounded-sm" side="bottom" align="end" sideOffset={20}>
+                    <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
     )
 }

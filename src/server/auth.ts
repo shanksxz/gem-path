@@ -86,8 +86,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    // signIn: "/auth/signin",
-    // error: "/auth/error",
+    signIn: "/auth/signin",
   },
   debug: process.env.NODE_ENV === "development",
 };
